@@ -71,7 +71,8 @@ class Player implements iPlayer{
     public function getId(){
        return $this->id ;
     }
-    public function checkLogin( $user){
+    public function checkLogin($userId){
+        $this->userId = $userId;
         //TODO: call to the service and retrieve the data. If exists and pass is correct, return true
 
         return false;
@@ -162,6 +163,18 @@ class Move implements iMove{
         return $this->movement;
     }
 }
-echo "Hello! What is your name (enter below):\n";
-$strName = fread(STDIN, 30); // Read up to 30 characters or a newline
-echo 'Hello ' , $strName , "\n";
+echo "Welcome to Tic Tac Toe API!\nWhat is your email?(enter below):\n";
+$userId = fread(STDIN, 30); // Read up to 30 characters or a newline
+$pl = new Player();
+if($pl->checkLogin($userId)){
+
+}else{
+echo "You don't have an account yet. \nWhat will your Playername be?\n";
+$playerId = fread(STDIN, 30);
+echo "Hello $playerId!! write your password.\n";
+$password = fread(STDIN, 80);
+$user = new User($userId,$password);
+$pl->createUser($user);
+echo "New User created with email $userId and playerName $playerId.\nLet's play!";
+
+}
