@@ -28,14 +28,14 @@ class Player implements iPlayer{
     public function createUser( $user){
         
         $newUser= new User($user->getId(),$user->getPassword());
-        
-        //TODO: persist to the service
+        //persist to the service
+        $this->API->createUser($newUser);
     }
     public function getPendingGames(){
         //TODO: call to the service and retrieve the data.
         
-        $data = ["first game","sencond game", "third game"];
-        // $data = $this->API->
+        // $data = ["first game","sencond game", "third game"];
+        $data = $this->API->getPendingGames($this->getUserId());
         return $data;
     }
     public function newGame(){

@@ -27,39 +27,63 @@ class Launcher{
             $user = new User($userId,$password);
             if ($pl->API->getUser($user) !==null){
                 $pl->setUserId($userId);
-                echo "What will your Playername be today?\n";
-            $playerId = trim(fread(STDIN, 30));
-            $pl->setId($playerId);
-            echo "$playerId, Let's beat some asses!\n";
-            }else{
-                echo "password is wrong. Restart game\n";
-                $this->endGame = true;
+                $this->selection = "1983";
+                while($this->selection !=="0"){
+                    echo "What you want to do?\n0) Play game\n1) Delete user $userId\n";
+                    $this->selection = trim(fread(STDIN, 3));
+                    
+                    if($this->selection === '1'){
+                        echo "Players before deleting $userId in game's memory:\n";
+                        print_r($pl->API->getUsers());
+                        echo "\n";
+                        $pl->API->deleteUser($user);
+                        echo "Players remaining in game's memory:\n";
+                        print_r($pl->API->getUsers());
+                        echo "\n";
+                        echo "Restart game\n";
+                        $this->endGame = true;
+                        break;
+                }else if ($this->selection === '0'){
+                    echo "What will your Playername be today?\n";
+                    
+                    $playerId = trim(fread(STDIN, 30));
+                    $pl->setId($playerId);
+                    echo "$playerId, Let's beat some asses!\n";
+                    
+                }
             }
         }else{
-            echo "You don't have an account yet. \nWhat will your Playername be?\n";
-            $playerId = trim(fread(STDIN, 30));
-            $pl->setId($playerId);
-            echo "Hello $playerId!! write your password.\n";
-            $password = trim(fread(STDIN, 80));
-            $user = new User($userId,$password);
-            $pl->createUser($user);
-            echo "New User created with email ".$user->getId()." and playerName $playerId.\nLet's play!\n";
-            
+            echo "password is wrong. Restart game\n";
+            $this->endGame = true;
         }
-        while (!$this->endGame) {
-            //get pending games
+    }else{
+        echo "You don't have an account yet. \nWhat will your Playername be?\n";
+        $playerId = trim(fread(STDIN, 30));
+        $pl->setId($playerId);
+        echo "Hello $playerId!! write your password.\n";
+        $password = trim(fread(STDIN, 80));
+        $user = new User($userId,$password);
+        $pl->createUser($user);
+        echo "New User created with email ".$user->getId()." and playerName $playerId.\nLet's play!\n";
+        echo "This is the new list of players:\n";
+        print_r ($pl->API->getUsers());
+        
+    }
+    while (!$this->endGame) {
+        //get pending games
+        //show pending games and as many options as games pending
+        $selTxt = "Select the option that fits you most:\n";
+        echo $selTxt.
+        "0) Exit game\n1) New Match\n";
+        if($pl->API->userExists($pl->getUserId())!==false){
             $pl->games = $pl->getPendingGames();
-            //show pending games and as many options as games pending
-            $selTxt = "Select the option that fits you most:\n";
-            echo $selTxt.
-            "0) Exit game\n1) New Match\n";
-          foreach ($pl->games as $key => $value){
-                echo ((string) ($key+2)) . ") Move in game: " . $value ."\n";
-                
+            foreach ($pl->games as $key => $value){
+                echo ((string) ($key+2)) . ") Move in game vs " . $value ."\n";
             }
-            $this->selection = trim(fread(STDIN, 3));
-            if($this->selection === '0'){
-                $this->endGame = true;
+        }
+        $this->selection = trim(fread(STDIN, 3));
+        if($this->selection === '0'){
+            $this->endGame = true;
         }else{
             ($pl->games[$this->selection]);
             echo "one more time!\n";
