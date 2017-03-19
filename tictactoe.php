@@ -1,180 +1,75 @@
 #!/usr/bin/php -q
 <?php
-interface iUser{
-     
-   public function setId ( $id);
-   public function getId();
-   public function setPassword( $hashedPassword);
-   public function getPassword();
-
-};
-
-interface iPlayer{
-    public function setId($id);
-    public function getId();
-    public function checkLogin( $user);
-    public function createUser( $user);
-    public function getPendingGames();
-    public function newGame();
-    public function userMovement( $movement);
-    public function checkGameOver( $id);
-
-};
-interface iGame{
-    public function setOpponent(
-         $playerId);
-    public function getOpponent();
-    public function addMovement( $movement);
-    public function getMovements();
-    public function setWinner( $playerId);
-    public function getWinner();
-    public function setStatus( $status);
-    public function getStatus();
-
-}
-interface iMove{
-    public function setPlayer( $playerId);
-    public function getPlayer();
-    public function setMovement( $movement);
-    public function getMovement();
-}
-class User implements iUser{
-    private  $id,
-      $password;
-    private function HashPassword($toHash){
-        $this -> password = $toHash;
-    }
-    public function __construct($id,$password) {
-        $this->id = $id;
-        $this->password = $password;
-    }
-    public function setId($id){
-        $this->id = $id;
-    }
-    public function getId(){
-       return $this->id ;
-    }
-    public function setPassword($password){
-        HashPassword($password);
-    }
-    public function getPassword(){
-       return $this->password ;
-    }
-}
-class Player implements iPlayer{
-    private $id, 
-    $userId, 
-    $games;
-    public function setId($id){
-        $this->id = $id;
-    }
-    public function getId(){
-       return $this->id ;
-    }
-    public function checkLogin($userId){
-        $this->userId = $userId;
-        //TODO: call to the service and retrieve the data. If exists and pass is correct, return true
-
-        return false;
-    }
-    public function createUser( $user){
-
-       $newUser= new User($user->id,$user->password);
+require "./player/playerInterface.php";
+require "./player/playerClass.php";
+require "./user/userInterface.php";
+require "./user/userClass.php";
+require "./game/gameInterface.php";
+require "./game/gameClass.php";
+require "./move/moveInterface.php";
+require "./move/moveClass.php";
+require "./API/mockAPIClass.php";
+class Launcher{
+    protected $endGame= false;
+    protected $selection,
+    $API ;
+    public function run() {
+        $this->API = new MockAPI();
+        echo
+        "Welcome to Tic Tac Toe API!\n" .
+        "===========================\n\n" .
         
-        //TODO: persist to the service
-    }
-    public function getPendingGames(){
-        //TODO: call to the service and retrieve the data.
-        $data = "mockData";
-        return $data;
-    }
-    public function newGame(){
-        $game = new Game();
-        //TODO: persist to the service
-        return $game->id;
-    }
-    public function userMovement($movement){
-        
-        //TODO: persist to the service
-    }
-    public function checkGameOver($id){
-                //TODO: call to the service and retrieve the data.
-            $isOver = false;
-            return $isOver;
-    }
-}
-class Game implements iGame{
-    private $id,
-    $opponent,
-    $movements, 
-    $winner,
-    $status;
-    public function setOpponent($playerId){
-        $this->opponent = $playerId;
-    }
-    public function getOpponent(){
-        return $opponent;
-    }
-    public function addMovement($movement){
-        $allMovements = getMovements();
-        $allMovements += $movement;
-                //TODO: persist to the service
-
-    }
-    public function getMovements(){
-        //TODO: call to the service and retrieve the data.
-        $data = "movements from gameId";
-        return $data;
-    }
-    public function setWinner($playerId){
-        $this->winner = $playerId;
-                //TODO: persist to the service
-
-    }
-    public function getWinner(){
-        //TODO: call to the service and retrieve the data.
-        $data = "The winner is Soldeplata";
-        return $data;
-    }
-    public function setStatus($status){
-        $this->status = $status;
-                //TODO: persist to the service
-
-    }
-    public function getStatus(){
-        //TODO: call to the service and retrieve the data.
-        $data = "Status of game gameId";
-        return $data;
+        "What is your email?(enter below):\n";
+        $userId = trim(fread(STDIN, 30)); // Read up to 30 characters or a newline
+        $pl = new Player();
+        if($pl->checkLogin($userId, $this->API)!==false){
+            echo "Welcome back $userId!! write your password.\n";
+            $password = trim(fread(STDIN, 80));
+            $user = new User($userId,$password);
+            if ($this->API->getUser($user) !==null){
+                $pl->setUserId($userId);
+                echo "What will your Playername be today?\n";
+            $playerId = trim(fread(STDIN, 30));
+            $pl->setId($playerId);
+            echo "$playerId, Let's beat some asses!\n";
+            }else{
+                echo "password is wrong. Restart game\n";
+                $this->endGame = true;
+            }
+        }else{
+            echo "You don't have an account yet. \nWhat will your Playername be?\n";
+            $playerId = trim(fread(STDIN, 30));
+            $pl->setId($playerId);
+            echo "Hello $playerId!! write your password.\n";
+            $password = trim(fread(STDIN, 80));
+            $user = new User($userId,$password);
+            $pl->createUser($user);
+            echo "New User created with email ".$user->getId()." and playerName $playerId.\nLet's play!\n";
+            
+        }
+        while (!$this->endGame) {
+            //get pending games
+            $pl->games = $pl->getPendingGames();
+            //show pending games and as many options as games pending
+            $selTxt = "Select the option that fits you most:\n";
+            echo $selTxt.
+            "0) Exit game\n1) New Match\n";
+          foreach ($pl->games as $key => $value){
+                echo ((string) ($key+2)) . ") Move in game: " . $value ."\n";
+                
+            }
+            $this->selection = trim(fread(STDIN, 3));
+            if($this->selection === '0'){
+                $this->endGame = true;
+        }else{
+            ($pl->games[$this->selection]);
+            echo "one more time!\n";
+        }
+        if ($this->selection === '0') {
+            echo "Exiting game\n\n";
+        }
     }
 }
-class Move implements iMove{
-    private $movement, 
-    $playerId;
-    public function setPlayer( $playerId){
-        $this->playerId = $playerId;
-    }
-    public function getPlayer(){
-        return $this->playerId;
-    }
-    public function setMovement( $movement){
-        $this->movement = $movement;
-    }
-    public function getMovement(){
-        return $this->movement;
-    }
 }
-echo "Welcome to Tic Tac Toe API!\nWhat is your email?(enter below):\n";
-$userId = fread(STDIN, 30); // Read up to 30 characters or a newline
-$pl = new Player();
-if($pl->checkLogin($userId)){
-
-}else{
-echo "You don't have an account yet. \nWhat will your Playername be?\n";
-$playerId = fread(STDIN, 30);
-echo "Hello $playerId!! write your password.\n";
-$password = fread(STDIN, 80);
-$user = new User($userId,$password);
-$pl->createUser($user);
-echo "New User created with email $userId and playerName $playerId.\nLet's play!";
-
-}
+$launcher = new Launcher();
+$launcher->run();
