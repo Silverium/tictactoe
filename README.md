@@ -20,11 +20,11 @@ In the future it will be ‘consumed’ via an API, but we don’t need an API i
 We don’t know what kind of persistency we’ll use (relational database, no-sql….) and the code doesn’t need to store anything yet, but it should be prepared to save the users and games played. You can use mock-ups in order to test that everything is working.
 
 The use cases that we need to implement are:
-Create users
-Delete users
-Start a new game between two users
-A user doing a move in a game
-To know if a game has finished and if there is a winner
+- Create users
+- Delete users
+- Start a new game between two users
+- A user doing a move in a game
+- To know if a game has finished and if there is a winner
 
 What we ask you to do is to implement a set of classes / interfaces in PHP that implement those use cases and that can be run from the command line, having in mind that in the future we will use it via API.
 
