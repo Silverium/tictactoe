@@ -3,9 +3,10 @@ class Player implements iPlayer{
     private $id,
     $userId,
     $game;
-    public $games;
+    public $games, $API;
     public function __construct(){
         $this->game = new Game();
+        $this->API = new MockAPI();
     }
     public function setId($id){
         $this->id = $id;
@@ -19,10 +20,10 @@ class Player implements iPlayer{
     public function getUserId(){
         return $this->userId ;
     }
-    public function checkLogin($userId, $API){
+    public function checkLogin($userId){
         $this->userId = $userId;
         //calls to the service and retrieve the data. If does not exist, returns false
-        return $API->userExists($userId);
+        return $this->API->userExists($userId);
     }
     public function createUser( $user){
         
@@ -32,7 +33,9 @@ class Player implements iPlayer{
     }
     public function getPendingGames(){
         //TODO: call to the service and retrieve the data.
+        
         $data = ["first game","sencond game", "third game"];
+        // $data = $this->API->
         return $data;
     }
     public function newGame(){

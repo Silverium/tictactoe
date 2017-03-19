@@ -4,7 +4,7 @@ interface iPlayer{
     public function getId();
     public function setUserId($id);
     public function getUserId();
-    public function checkLogin( $user, $API);
+    public function checkLogin( $user);
     public function createUser( $user);
     public function getPendingGames();
     public function newGame();

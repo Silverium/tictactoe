@@ -11,10 +11,9 @@ require "./move/moveClass.php";
 require "./API/mockAPIClass.php";
 class Launcher{
     protected $endGame= false;
-    protected $selection,
-    $API ;
+    protected $selection;
     public function run() {
-        $this->API = new MockAPI();
+        
         echo
         "Welcome to Tic Tac Toe API!\n" .
         "===========================\n\n" .
@@ -22,11 +21,11 @@ class Launcher{
         "What is your email?(enter below):\n";
         $userId = trim(fread(STDIN, 30)); // Read up to 30 characters or a newline
         $pl = new Player();
-        if($pl->checkLogin($userId, $this->API)!==false){
+        if($pl->checkLogin($userId)!==false){
             echo "Welcome back $userId!! write your password.\n";
             $password = trim(fread(STDIN, 80));
             $user = new User($userId,$password);
-            if ($this->API->getUser($user) !==null){
+            if ($pl->API->getUser($user) !==null){
                 $pl->setUserId($userId);
                 echo "What will your Playername be today?\n";
             $playerId = trim(fread(STDIN, 30));
