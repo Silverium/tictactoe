@@ -13,10 +13,12 @@ class Tester{
     public $api;
     public $user;
     public $solde = "Soldeplata";
+    public $player;
     
     public function __construct(){
         $this->api= new MockAPI();
         $this->user = new User("Solde","asdf");
+        $this->player = new Player();
         
     }
     
@@ -45,6 +47,9 @@ $arr =$tester->api->getUsers();
 // $tester->api->deleteUser($tester->user);
 // $tester->api->createUser($tester->user);
 // print_r ($tester->api->getUsers());
-echo $tester->api->newGame($tester->user->getId());
-print_r($tester->api->getPendingGames($tester->user->getId()));
+// echo $tester->api->newGame($tester->user->getId());
+// print_r($tester->api->getPendingGames($tester->user->getId()));
+// $tester->player->userMovement();
+// echo $tester->api->userHasGames("Solde");
+echo $tester->api->checkGameOver("2");
 print "end\n";

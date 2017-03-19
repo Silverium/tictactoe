@@ -8,7 +8,7 @@ interface iPlayer{
     public function createUser( $user);
     public function getPendingGames();
     public function newGame();
-    public function userMovement( $movement);
+    public function userMovement();
     public function checkGameOver( $id);
     
 };

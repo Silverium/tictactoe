@@ -1,9 +1,9 @@
 <?php
 class Player implements iPlayer{
     private $id,
-    $userId,
+    $userId;
+    public $games, $API,
     $game;
-    public $games, $API;
     public function __construct(){
         $this->game = new Game();
         $this->API = new MockAPI();
@@ -32,9 +32,7 @@ class Player implements iPlayer{
         $this->API->createUser($newUser);
     }
     public function getPendingGames(){
-        //TODO: call to the service and retrieve the data.
-        
-        // $data = ["first game","sencond game", "third game"];
+        // call to the service and retrieve the data.
         $data = $this->API->getPendingGames($this->getUserId());
         return $data;
     }
@@ -47,13 +45,23 @@ class Player implements iPlayer{
         $this->game->setId($index);
         
     }
-    public function userMovement($movement){
+    public function userMovement(){
+        $userId = $this->getUserId();
+        //interface to choose the movement
+        //not sending the parameter makes the echoes be very unreusable
+        echo "Choose the cell where to move\n";
+        for ($i =1;$i<10;$i++){
+            echo "$i) Cell $i\n";
+        }
+        $movement = trim(fread(STDIN, 3));
+        $move = new Move($movement, $userId);
+        // persist to the service
+        $this->API->addMovement($move,$userId, $this->game->getId());
         
-        //TODO: persist to the service
     }
     public function checkGameOver($id){
-        //TODO: call to the service and retrieve the data.
-        $isOver = false;
-        return $isOver;
+        // call to the service and retrieve the data.
+        $status = $this->API->checkGameOver($id);
+        return $status;
     }
 }

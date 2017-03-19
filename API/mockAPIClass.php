@@ -30,7 +30,9 @@ class MockAPI{
         return $this->users;
     }
     public function createUser($user){
-        array_push($this->users,$user);
+        $arr =["id" =>$user->getId(), "password"=>$user->getPassword()];
+        array_push($this->users,$arr);
+        
     }
     function userExists($userId){
         return array_search($userId, array_column($this->users,"id"));
@@ -43,7 +45,13 @@ class MockAPI{
             return null;
         }
     }
+    public function userHasGames($userId){
+        $arrIds = array_column($this->games,"id");
+        $has= array_search($userId, $arrIds);
+        return $has !== false;
+    }
     public function getPendingGames($userId){
+        
         return $this->games[array_search($userId, array_column($this->games,"id"))]["games"];
     }
     public function newGame($userId){
@@ -51,15 +59,39 @@ class MockAPI{
         $opponent =$userId;
         while ($opponent === $userId) {
             $arrIds = array_column($this->users,"id");
-           $indOp= array_rand($arrIds);
-           $opponent= $arrIds[$indOp];
+            $indOp= array_rand($arrIds);
+            $opponent= $arrIds[$indOp];
         }
         //push opponent as the new game in games object
         //array push returns the number of elements, that is the index of new Game
         $indUser = $this->userExists($userId);
-        $index = array_push($this->games[$indUser]["games"],$opponent);
+        if ($this->userHasGames($userId)!==false) {
+            
+            $index = array_push($this->games[$indUser]["games"],$opponent);
+        }else{
+            $index =1;
+            array_push($this->games,["id"=>$userId, "games" =>[$opponent]]);
+            
+        }
+        $indOp= array_search($opponent, array_column($this->games,"id"));
         //push as well in games of opponent with userId
-        array_push($this->games[$opponent]["games"],$userId);
+        array_push($this->games[$indOp]["games"], $userId);
         return $index;
+    }
+    public function addMovement($move,$userId,$gameId){
+        //TODO: this would persist the movement in an associative array
+        echo "Movement persisted to DB\n";
+        
+    }
+    public function checkGameOver($id){
+        //TODO: store in DB the status and retrieve it from DB instead of returning a mock response
+        $i = rand(1,3);
+        if ($i === 1) {
+            return "You lost\n";
+        } elseif ($i === 2) {
+            return "You lost\n";
+        } elseif ($i === 3) {
+            return "Not finished yet\n";
+        }
     }
 }
