@@ -40,8 +40,12 @@ class Player implements iPlayer{
     }
     public function newGame(){
         $this->game = new Game();
-        //TODO: persist to the service
-        return $game->id;
+        //persist to the service
+        $index = $this->API->newGame($this->getUserId());
+        //persist to self
+        $this->games = $this->API->getPendingGames($this->getUserId());
+        $this->game->setId($index);
+        
     }
     public function userMovement($movement){
         

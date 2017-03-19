@@ -44,11 +44,22 @@ class MockAPI{
         }
     }
     public function getPendingGames($userId){
-        // return pending games of selected user
-            return $this->games[array_search($userId, array_column($this->games,"id"))]["games"];
-        // if ($this->userExists($userId)!==false) {
-        // }else{
-        //     return null;
-        // }
+        return $this->games[array_search($userId, array_column($this->games,"id"))]["games"];
+    }
+    public function newGame($userId){
+        //get users and select random user except userId
+        $opponent =$userId;
+        while ($opponent === $userId) {
+            $arrIds = array_column($this->users,"id");
+           $indOp= array_rand($arrIds);
+           $opponent= $arrIds[$indOp];
+        }
+        //push opponent as the new game in games object
+        //array push returns the number of elements, that is the index of new Game
+        $indUser = $this->userExists($userId);
+        $index = array_push($this->games[$indUser]["games"],$opponent);
+        //push as well in games of opponent with userId
+        array_push($this->games[$opponent]["games"],$userId);
+        return $index;
     }
 }

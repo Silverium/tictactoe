@@ -10,6 +10,7 @@ class Move implements iMove{
     }
     public function setMovement( $movement){
         $this->movement = $movement;
+        //persist to API
     }
     public function getMovement(){
         return $this->movement;

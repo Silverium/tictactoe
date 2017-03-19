@@ -32,10 +32,10 @@ $arr =$tester->api->getUsers();
     
 // }
 
-foreach ($tester->api->getPendingGames("Solde") as $key => $value){
-    echo ((string) ($key+2)) . ") Move in game vs " . $value ."\n";
+// foreach ($tester->api->getPendingGames("Solde") as $key => $value){
+//     echo ((string) ($key+2)) . ") Move in game vs " . $value ."\n";
     
-}
+// }
 // var_dump($tester->api->getPendingGames($tester->user->getId()));
 // if ($tester->api->getUser($tester->user)!==null) {
 //     print "exists\n";
@@ -45,5 +45,6 @@ foreach ($tester->api->getPendingGames("Solde") as $key => $value){
 // $tester->api->deleteUser($tester->user);
 // $tester->api->createUser($tester->user);
 // print_r ($tester->api->getUsers());
-
+echo $tester->api->newGame($tester->user->getId());
+print_r($tester->api->getPendingGames($tester->user->getId()));
 print "end\n";

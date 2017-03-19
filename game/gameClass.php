@@ -5,6 +5,12 @@ class Game implements iGame{
     $movements,
     $winner,
     $status;
+    public function setId($id){
+        $this->id = $id;
+    }
+    public function getId(){
+        return $this->id ;
+    }
     public function setOpponent($playerId){
         $this->opponent = $playerId;
     }

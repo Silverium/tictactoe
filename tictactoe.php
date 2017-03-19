@@ -84,10 +84,20 @@ class Launcher{
         $this->selection = trim(fread(STDIN, 3));
         if($this->selection === '0'){
             $this->endGame = true;
+        }else if($this->selection === '1'){
+            //call API to start new game with random player through playerClass
+            $pl->newGame();
+            
+
+        }else if($this->selection < count($pl->games)+2){
+            //select existing game and send a movement on it
+            echo "selected option $this->selection";
+            $this->endGame = true;
         }else{
             ($pl->games[$this->selection]);
             echo "one more time!\n";
         }
+        
         if ($this->selection === '0') {
             echo "Exiting game\n\n";
         }
