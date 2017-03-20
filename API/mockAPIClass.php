@@ -1,5 +1,6 @@
 <?php
-
+# All exchange of information has been done with native associative arrays.
+# In a real API service it should be transformed to JSON objects
 class MockAPI{
     private $users,$games;
     function __construct(){
