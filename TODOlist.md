@@ -29,7 +29,7 @@ PHP:
 JavaScript:
 
     function getUser(user){
-        return users.find((el)=>{return el.id === user.id});
+        return users.find(el=>return el.id === user.id);
     }
 
 This case is very clear. I am here finding in JS the `user.id`, but it could be done with the whole `user` object, letting it be even shorter. In case the user does not exist, `find` would return undefined. In case it finds it, it would stop executing the code. 
