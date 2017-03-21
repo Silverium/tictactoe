@@ -5,6 +5,7 @@
 - Answer with a status field with log of errors
 - Implement a security key to access to the service (oAuth or others)
 - Return custom field to requester
+- Documentation of API
 ## Backend - client side
 - Exponential back-off to server errors
 - Rate-limiting requests
@@ -29,7 +30,7 @@ PHP:
 JavaScript:
 
     function getUser(user){
-        return users.find(el=>return el.id === user.id);
+        return users.find(el=>{return el.id === user.id});
     }
 
 This case is very clear. I am here finding in JS the `user.id`, but it could be done with the whole `user` object, letting it be even shorter. In case the user does not exist, `find` would return undefined. In case it finds it, it would stop executing the code. 
